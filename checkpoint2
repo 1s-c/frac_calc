@@ -1,0 +1,94 @@
+package fracCalc;
+import java.util.*;
+public class FracCalc {
+
+    public static void main(String[] args) {
+      try (Scanner console = new Scanner (System.in)) {
+        while (true){
+            System.out.print("Enter your expression (or 'quit' to quit): ");
+            String input = console.nextLine();
+            //quits when quit typed
+         
+      
+            if (input.equals("quit")){
+              break;
+            }
+          
+          
+            System.out.println(produceAnswer(input));
+            
+          }
+        
+    }
+    }
+ 
+    public static String produceAnswer(String input)
+    { 
+      System.out.println(input);
+      String operand1 = "";
+      String operator = "";
+      String operand2 = "";
+      for (int i = 0; i < input.length(); i++){
+        if (input.charAt(i) == ' '){
+          operator = input.substring(i+1, i+2);
+          for (int j = i+3; j < input.length(); j = j+1){
+            operand2 += input.charAt(j);
+          }
+          break;
+        }
+        operand1 += input.charAt(i);
+        
+      }
+      //System.out.println(operand1);
+      //System.out.println(operator);
+      //System.out.print(operand2);
+      //splitOperandToInt(operand1);
+      
+        
+        return splitOperandToInt(operand2);
+    }
+
+  public static String splitOperandToInt(String operand){
+    String wholeNumber = "";
+    String numerator = "";
+    String denominator = "";
+    System.out.println(operand);
+  
+    int indexUnderscore = operand.indexOf('_');
+    int indexSlash = operand.indexOf('/');
+    
+    System.out.println("index of underscore: " + indexUnderscore);
+    System.out.println("index of slash: " + indexSlash);
+
+    if (indexSlash == -1 && indexUnderscore == -1 ){
+        wholeNumber = operand;
+        numerator = "0";
+        denominator = "1";
+        
+    }
+    
+    if (indexUnderscore == -1 && indexSlash != -1){
+      wholeNumber = "0";
+      numerator = operand.substring(0, indexSlash);
+      denominator = operand.substring(indexSlash+1, operand.length());
+
+    }
+    if (indexUnderscore != -1 && indexSlash != -1) {
+      wholeNumber = operand.substring(0, indexUnderscore);
+      numerator = operand.substring(indexUnderscore + 1, indexSlash);
+      denominator = operand.substring(indexSlash+1, operand.length());
+    } 
+    
+    System.out.println("whole " + wholeNumber);
+    System.out.println("numer " + numerator);
+    System.out.println("denom " + denominator);
+    
+
+    int wholeInt = Integer.parseInt(wholeNumber);
+    int numerInt = Integer.parseInt(numerator);
+    int denomInt = Integer.parseInt(denominator);
+    
+    return ("whole:" +wholeInt+ " numerator:" +numerInt + " denominator:" + denomInt);
+
+  }
+}
