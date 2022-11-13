@@ -1,0 +1,275 @@
+package fracCalc;
+import java.util.*;
+public class FracCalc {
+
+    public static void main(String[] args) {
+      try (Scanner console = new Scanner (System.in)) {
+        while (true){
+            System.out.print("Enter your expression (or 'quit' to quit): ");
+            String input = console.nextLine();
+            if (input.equals("quit")){
+              break;
+            }
+            System.out.println(produceAnswer(input));
+          }
+      }
+    }
+  
+
+    
+  static int wholeInt = 0;
+  static int numerInt = 0;
+  static int denomInt = 0;
+  
+    public static String produceAnswer(String input)
+    { 
+      System.out.println("input string: " + input);
+      String operator = "";
+      
+      String operand1 = "";
+      String operand2 = "";
+      
+      for (int i = 0; i < input.length(); i++){
+        if (input.charAt(i) == ' '){
+          operator = input.substring(i+1, i+2);
+          for (int j = i+3; j < input.length(); j = j+1){
+            operand2 += input.charAt(j);
+          }
+          break;
+        }
+        operand1 += input.charAt(i);
+        
+      }
+      //System.out.println(operand1);
+      System.out.println(operator);
+      //System.out.print(operand2);
+
+
+      //important keep together
+      splitOperandToInt(operand1);
+      int op1whole = wholeInt;
+      int op1numer = numerInt;
+      int op1denom = denomInt;
+
+      System.out.println(op1whole);
+      System.out.println(op1numer);
+      System.out.println(op1denom);
+
+      //important keep together
+      splitOperandToInt(operand2);
+      int op2whole = wholeInt;
+      int op2numer = numerInt;
+      int op2denom = denomInt;
+
+      
+      System.out.println(op2whole);
+      System.out.println(op2numer);
+      System.out.println(op2denom);
+      int wholeAnswer = 0;
+      int numerAnswer = 0;
+      int denomAnswer = 0;
+
+      int [] array1 = {};
+      int [] array2 = {};
+      int [] evaluatedArray = {};
+      int [] mixed = {};
+      int [] simplifiedFraction = {};
+      
+      
+      if (operator.equals("+") ) {
+        array1 = makeImproper (op1whole, op1numer, op1denom);
+        System.out.println("1 array: " + Arrays.toString(array1));
+        array2 = makeImproper (op2whole, op2numer, op2denom);
+        System.out.println("2 array: " + Arrays.toString(array2));
+        evaluatedArray = addImpropers(array1[0], array1[1], array2[0], array2[1]);
+        System.out.println("evaluated array: " + Arrays.toString(evaluatedArray));
+        mixed = makeMixed(evaluatedArray[0], evaluatedArray[1]);
+        System.out.println("mixed fraction: " + Arrays.toString(mixed));
+        simplifiedFraction = simplifyFraction(mixed[1], mixed[2]);
+
+        wholeAnswer = mixed[0];
+        numerAnswer = simplifiedFraction[0];
+        denomAnswer =  simplifiedFraction[1];
+      } 
+        
+      else if (operator.equals("-")){
+        array1 = makeImproper (op1whole, op1numer, op1denom);
+        array2 = makeImproper (op2whole, op2numer, op2denom);
+        evaluatedArray =  subtractImpropers(array1[0], array1[1], array2[0], array2[1]);
+        System.out.println(Arrays.toString(evaluatedArray));
+        mixed = makeMixed(evaluatedArray[0], evaluatedArray[1]);
+        System.out.println(Arrays.toString(mixed));
+        simplifiedFraction = simplifyFraction(mixed[1], mixed[2]);
+
+        wholeAnswer = mixed[0];
+        numerAnswer = simplifiedFraction[0];
+        denomAnswer =  simplifiedFraction[1];
+        
+      }
+       else if (operator.equals("*")){
+        array1 = makeImproper (op1whole, op1numer, op1denom);
+        array2 = makeImproper (op2whole, op2numer, op2denom);
+        evaluatedArray =  multiplyImpropers(array1[0], array1[1], array2[0], array2[1]);
+        System.out.println(Arrays.toString(evaluatedArray));
+        mixed = makeMixed(evaluatedArray[0], evaluatedArray[1]);
+        System.out.println(Arrays.toString(mixed));
+        simplifiedFraction = simplifyFraction(mixed[1], mixed[2]);
+
+        wholeAnswer = mixed[0];
+        numerAnswer = simplifiedFraction[0];
+        denomAnswer =  simplifiedFraction[1];
+        
+      }
+      else if (operator.equals("/")){
+        array1 = makeImproper (op1whole, op1numer, op1denom);
+        array2 = makeImproper (op2whole, op2numer, op2denom);
+        evaluatedArray =  divideImpropers(array1[0], array1[1], array2[0], array2[1]);
+        System.out.println(Arrays.toString(evaluatedArray));
+        mixed = makeMixed(evaluatedArray[0], evaluatedArray[1]);
+        System.out.println(Arrays.toString(mixed));
+        simplifiedFraction = simplifyFraction(mixed[1], mixed[2]);
+
+        wholeAnswer = mixed[0];
+        numerAnswer = simplifiedFraction[0];
+        denomAnswer =  simplifiedFraction[1];
+        
+      }
+      
+     
+      
+
+
+      
+      return wholeAnswer + "_" + numerAnswer + "/" + denomAnswer;
+    }
+
+    //first element is numerator and second is denominator
+    public static int[] makeImproper(int whole, int numer, int denom){
+      int top;
+      if (whole < 0) {
+        whole = whole * -1;
+        top = whole * denom + numer;
+        top = top *-1;
+      }
+      else{
+        top = whole * denom + numer;
+      }
+      int[] improper = {top, denom};
+      
+      
+      //System.out.print(Arrays.toString(improper));
+      return improper;
+    }
+    public static int[] addImpropers(int numer1, int denom1, int numer2, int denom2) {
+      //first element is numerator
+      //second is denom
+      int [] array = {denom2 * numer1 + denom1 * numer2, denom1 * denom2};
+      return array;
+    }
+    public static int[] subtractImpropers(int numer1, int denom1, int numer2, int denom2) {
+        //first element is numerator
+        //second is denom
+        int [] array = {denom2 * numer1 - denom1 * numer2, denom1 * denom2};
+        return array;
+    }
+
+  
+    public static int[] multiplyImpropers(int numer1, int denom1, int numer2, int denom2) {
+        //first element is numerator
+        //second is denom
+        int [] array = {numer1 * numer2, denom1 * denom2};
+        return array;
+    }
+    public static int[] divideImpropers(int numer1, int denom1, int numer2, int denom2) {
+        //first element is numerator
+        //second is denom
+        int [] array = {numer1 * denom2, denom1 * numer2};
+        return array;
+    }
+
+  
+
+    public static int[] makeMixed (int numer, int denom){
+      //returns 3 elements
+      int whole = numer/denom;
+      int numerator = numer % denom;
+      if (numerator < 0) numerator *= -1;
+      int [] array = {whole, numerator, denom};
+      return array;
+      
+    }
+  
+    public static int[] simplifyFraction(int numer, int denom){
+      int gcf = gcf(numer, denom);
+      int [] newFraction = {numer/gcf, denom/gcf};
+      return newFraction;
+    
+    }
+    public static int gcf (int a, int b){
+    if (a < 0) a *= -1;
+    if (b < 0) b *= -1;
+    while (a != 0){
+      int originalNumer = a;
+      a = b % a;
+      b = originalNumer;
+    }
+    return b;
+    
+  }
+  
+  
+  
+  
+    
+
+
+
+
+
+
+
+
+
+
+  public static String splitOperandToInt(String operand){
+
+    String wholeNumber = "";
+    String numerator = "";
+    String denominator = "";
+    //System.out.println(operand);
+  
+    int indexUnderscore = operand.indexOf('_');
+    int indexSlash = operand.indexOf('/');
+    
+    //System.out.println("index of underscore: " + indexUnderscore);
+    //System.out.println("index of slash: " + indexSlash);
+
+    if (indexSlash == -1 && indexUnderscore == -1 ){
+        wholeNumber = operand;
+        numerator = "0";
+        denominator = "1";    
+    }
+    
+    if (indexUnderscore == -1 && indexSlash != -1){
+      wholeNumber = "0";
+      numerator = operand.substring(0, indexSlash);
+      denominator = operand.substring(indexSlash+1, operand.length());
+    }
+    if (indexUnderscore != -1 && indexSlash != -1) {
+      wholeNumber = operand.substring(0, indexUnderscore);
+      numerator = operand.substring(indexUnderscore + 1, indexSlash);
+      denominator = operand.substring(indexSlash+1, operand.length());
+    } 
+
+    //System.out.println("whole " + wholeNumber);
+    //System.out.println("numer " + numerator);
+    //System.out.println("denom " + denominator);
+
+    wholeInt = Integer.parseInt(wholeNumber);
+    numerInt = Integer.parseInt(numerator);
+    denomInt = Integer.parseInt(denominator);
+    
+    return ("whole:" +wholeInt+ " numerator:" +numerInt + " denominator:" + denomInt);
+
+  }
+}
